@@ -8,6 +8,7 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 from urllib.parse import ParseResult, urlparse
 
@@ -24,6 +25,15 @@ try:
 except ImportError:
     install_playwright_public_url_guard = None
     validate_public_url = None
+
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+from url_safety import (  # noqa: E402  (sys.path massage above is intentional)
+    URLSafetyError,
+    make_safe_playwright_route_handler,
+    validate_url_strict,
+)
 
 
 def normalize_url(url: str) -> tuple[str, ParseResult]:

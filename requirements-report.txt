@@ -2,5 +2,6 @@
 # Optional for chart, spreadsheet, and PDF deliverables.
 
 matplotlib>=3.10.9,<4.0.0
+numpy>=1.26.0,<3.0.0
 weasyprint>=68.1,<70.0
 openpyxl>=3.1.5,<4.0.0

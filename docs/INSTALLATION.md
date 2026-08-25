@@ -5,19 +5,19 @@
 ### Unix
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pdmonetization/codex-seo/main/install.sh | bash
 ```
 
 ### Windows
 
 ```powershell
-irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.ps1 | iex
+irm https://raw.githubusercontent.com/pdmonetization/codex-seo/main/install.ps1 | iex
 ```
 
 ## Manual Install From Local Checkout
 
 ```bash
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/pdmonetization/codex-seo.git
 cd codex-seo
 bash install.sh
 ```
@@ -25,7 +25,7 @@ bash install.sh
 Windows:
 
 ```powershell
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/pdmonetization/codex-seo.git
 cd codex-seo
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
@@ -42,7 +42,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 - `CODEX_HOME`: alternate Codex home
 - `CODEX_SEO_REPO`: fork or local Git path
-- `CODEX_SEO_REF`: branch, tag, or commit; defaults to `v1.9.6-codex.5`
+- `CODEX_SEO_REF`: branch, tag, or commit; defaults to `main`
 - `CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER=1`: skip Chromium install
 - `CODEX_SEO_PLAYWRIGHT_WITH_DEPS=1`: install Playwright system deps where supported
 
@@ -50,12 +50,14 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 ```bash
 ~/.codex/skills/seo/.venv/bin/python ~/.codex/skills/seo/scripts/verify_environment.py
+~/.codex/skills/seo/bin/codex-seo doctor --json
 ```
 
 Windows:
 
 ```powershell
 & "$HOME\.codex\skills\seo\.venv\Scripts\python.exe" "$HOME\.codex\skills\seo\scripts\verify_environment.py"
+& "$HOME\.codex\skills\seo\bin\codex-seo" doctor --json
 ```
 
 ## Uninstall

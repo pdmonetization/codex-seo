@@ -10,6 +10,7 @@ Codex SEO works best from natural-language prompts, but command-style prompts ar
 | `/seo page <url>` | Deep single-page analysis |
 | `/seo technical <url>` | Crawlability, indexability, CWV, JavaScript, security |
 | `/seo content <url>` | E-E-A-T, helpfulness, readability, AI citation readiness |
+| `/seo content-brief <topic or url>` | Search-intent-led writing brief and outline |
 | `/seo schema <url>` | Structured data detection, validation, generation |
 | `/seo images <url>` | Alt text, image weight, metadata, SERP image opportunities |
 | `/seo sitemap <url>` | XML sitemap discovery, coverage, generation guidance |
@@ -33,13 +34,20 @@ Codex SEO works best from natural-language prompts, but command-style prompts ar
 | `/seo dataforseo <command>` | Live DataForSEO data when MCP is configured |
 | `/seo firecrawl <command>` | Site crawling when Firecrawl MCP is configured |
 | `/seo image-gen <use-case>` | SEO image asset generation when MCP is configured |
+| `/seo ahrefs <command>` | Ahrefs backlink and organic research when configured |
+| `/seo bing <command>` | Bing Webmaster and IndexNow workflows |
+| `/seo profound <command>` | LLM citation tracking when configured |
+| `/seo seranking <command>` | AI share-of-voice tracking when configured |
+| `/seo unlighthouse <url>` | Local multi-page Lighthouse crawl |
+| `/seo setup` | Create or refresh the isolated runtime |
+| `/seo doctor` | Check runtime readiness without changing it |
 
 ## Headless Examples
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-google https://example.com --json
-python scripts/run_api_smoke_suite.py https://example.com --skill seo-drift --json
+codex-seo run run_skill_workflow.py --skill seo-technical https://example.com --json
+codex-seo run run_skill_workflow.py --skill seo-google https://example.com --json
+codex-seo run run_api_smoke_suite.py https://example.com --skill seo-drift --json
 ```
 
 Wrappers write artifacts to `output/` and cache summaries to `.seo-cache/`.

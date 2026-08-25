@@ -1,6 +1,6 @@
 [project]
 name = "codex-seo"
-version = "1.9.6+codex.5"
+version = "2.2.4+codex.1"
 description = "Comprehensive SEO analysis skill suite for Codex"
 requires-python = ">=3.10"
 license = "MIT"
@@ -15,9 +15,11 @@ keywords = [
   "schema-markup",
   "dataforseo",
   "mcp",
+  "e-e-a-t",
+  "geo",
 ]
 authors = [
-  { name = "AgriciDaniel" },
+  { name = "Daniel Agrici" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -33,5 +35,13 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AgriciDaniel/codex-seo"
-Repository = "https://github.com/AgriciDaniel/codex-seo"
+Homepage = "https://github.com/pdmonetization/codex-seo"
+Repository = "https://github.com/pdmonetization/codex-seo"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]

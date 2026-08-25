@@ -8,18 +8,23 @@
 
 # Codex SEO - SEO Audit Skill Suite for Codex
 
-Codex-first SEO analysis suite with 1 orchestrator skill, 26 specialist workflows, 24 TOML agent profiles, MCP/API extensions, deterministic headless runners, and premium audit report generation.
+Codex-first SEO analysis suite with 1 orchestrator skill, 27 core specialist workflows plus 5 optional provider workflows, 24 TOML agent profiles, MCP/API extensions, deterministic headless runners, and premium audit report generation.
 
-[![CI](https://github.com/AgriciDaniel/codex-seo/actions/workflows/runners-ci.yml/badge.svg)](https://github.com/AgriciDaniel/codex-seo/actions/workflows/runners-ci.yml)
-[![Release](https://img.shields.io/github/v/release/AgriciDaniel/codex-seo?label=Release)](https://github.com/AgriciDaniel/codex-seo/releases)
+[![CI](https://github.com/pdmonetization/codex-seo/actions/workflows/runners-ci.yml/badge.svg)](https://github.com/pdmonetization/codex-seo/actions/workflows/runners-ci.yml)
+[![Release](https://img.shields.io/github/v/release/pdmonetization/codex-seo?label=Release)](https://github.com/pdmonetization/codex-seo/releases)
 [![Codex Skill](https://img.shields.io/badge/Codex-Skill_Suite-blue)](https://github.com/openai/codex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](pyproject.toml)
-[![Workflows](https://img.shields.io/badge/SEO_Workflows-26-orange)](docs/COMMANDS.md)
+[![Workflows](https://img.shields.io/badge/SEO_Workflows-32-orange)](docs/COMMANDS.md)
 
-Codex SEO is a Codex-native port of [`AgriciDaniel/claude-seo`](https://github.com/AgriciDaniel/claude-seo), synchronized to upstream `main` at `a9cf338` and adapted for Codex skills, Codex plugins, TOML agents, shared cache artifacts, and repeatable local/API execution.
+Codex SEO is a Codex-native port of [`AgriciDaniel/claude-seo`](https://github.com/AgriciDaniel/claude-seo), synchronized to upstream v2.2.4 at `09d37c7` and adapted for Codex skills, Codex plugins, TOML agents, shared cache artifacts, and repeatable local/API execution.
 
 It covers technical SEO, on-page analysis, content quality, E-E-A-T, schema markup, image optimization, sitemap architecture, Core Web Vitals, GEO/AEO for AI search, backlinks, local SEO, maps intelligence, Google APIs, semantic clustering, SXO, drift monitoring, e-commerce SEO, hreflang, FLOW prompts, DataForSEO, Firecrawl, and Gemini/nanobanana image workflows.
+
+The v2.2.4 Codex port adds SPA-aware rendering, DNS-rebinding-safe URL fetches,
+sitemap discovery, content quality/humanization checks, Google update tracking,
+LCP subpart diagnostics, IndexNow, e-commerce schema generation, UCP checks,
+AI-citation vendor extensions, and a managed `codex-seo` runtime.
 
 ## Contents
 
@@ -45,9 +50,9 @@ It covers technical SEO, on-page analysis, content quality, E-E-A-T, schema mark
 ## Status
 
 - Repository visibility: public.
-- Current release: [`v1.9.6-codex.5`](https://github.com/AgriciDaniel/codex-seo/releases/tag/v1.9.6-codex.5).
-- Installer default ref: `v1.9.6-codex.5`.
-- Latest local validation: 52 tests passing, full installed smoke suite passing, demo readiness passing.
+- Current development version: `2.2.4+codex.1` on `main`.
+- Installer default ref: `main`.
+- Latest validation status is recorded by the CI badge and release notes.
 - Runtime credentials stay outside the repo under Codex/local config paths.
 - Discovery topics: `codex`, `codex-cli`, `codex-skills`, `seo`, `ai-seo`, `ai-search`, `technical-seo`, `generative-engine-optimization`, `core-web-vitals`, `schema-markup`, `local-seo`, `ecommerce-seo`, `content-strategy`, `google-search-console`, `dataforseo`, `mcp`, `python`, `automation`, `marketing-automation`, `open-source`.
 
@@ -56,19 +61,19 @@ It covers technical SEO, on-page analysis, content quality, E-E-A-T, schema mark
 ### One-Line Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/pdmonetization/codex-seo/main/install.sh | bash
 ```
 
 Windows:
 
 ```powershell
-irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/v1.9.6-codex.5/install.ps1 | iex
+irm https://raw.githubusercontent.com/pdmonetization/codex-seo/main/install.ps1 | iex
 ```
 
 ### Review Before Installing
 
 ```bash
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/pdmonetization/codex-seo.git
 cd codex-seo
 bash install.sh
 ```
@@ -76,7 +81,7 @@ bash install.sh
 Windows:
 
 ```powershell
-git clone https://github.com/AgriciDaniel/codex-seo.git
+git clone https://github.com/pdmonetization/codex-seo.git
 cd codex-seo
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
@@ -87,8 +92,8 @@ The installer copies the skill suite into `~/.codex/skills/`, installs TOML agen
 
 ```bash
 CODEX_HOME=~/.codex \
-CODEX_SEO_REPO=https://github.com/AgriciDaniel/codex-seo \
-CODEX_SEO_REF=v1.9.6-codex.5 \
+CODEX_SEO_REPO=https://github.com/pdmonetization/codex-seo \
+CODEX_SEO_REF=main \
 bash install.sh
 ```
 
@@ -96,7 +101,7 @@ bash install.sh
 |---|---|
 | `CODEX_HOME` | Alternate Codex home. Defaults to `~/.codex`. |
 | `CODEX_SEO_REPO` | Git URL, fork URL, or local repository path. |
-| `CODEX_SEO_REF` | Branch, tag, or commit. Defaults to `v1.9.6-codex.5`. |
+| `CODEX_SEO_REF` | Branch, tag, or commit. Defaults to `main`. |
 | `CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER=1` | Skip Chromium install for visual/PDF workflows. |
 | `CODEX_SEO_PLAYWRIGHT_WITH_DEPS=1` | Ask Playwright to install system dependencies where supported. |
 
@@ -134,7 +139,7 @@ Codex SEO is designed as a Codex-first routing layer: the user can ask naturally
 flowchart LR
   user["User prompt<br/>natural language or /seo"] --> orchestrator["skills/seo/SKILL.md<br/>main orchestrator"]
   orchestrator --> cache[".seo-cache<br/>shared evidence"]
-  orchestrator --> skills["26 specialist<br/>SEO workflows"]
+  orchestrator --> skills["27 core + 5 optional<br/>SEO workflows"]
   skills --> agents["24 TOML agents<br/>parallel analysis slices"]
   skills --> scripts["scripts/<br/>deterministic runners"]
   scripts --> output["output/<br/>Markdown, JSON, HTML, PDF"]
@@ -156,6 +161,7 @@ flowchart LR
 | `/seo page <url>` | Deep single-page SEO analysis |
 | `/seo technical <url>` | Crawlability, indexability, security, JavaScript, CWV |
 | `/seo content <url>` | E-E-A-T, helpfulness, readability, AI citation readiness |
+| `/seo content-brief <topic or url>` | Competitive writing brief, outline, evidence, and internal links |
 | `/seo schema <url>` | Structured data detection, validation, and JSON-LD generation |
 | `/seo images <url>` | Alt text, image weight, formats, metadata, image SERP opportunities |
 | `/seo sitemap <url>` | XML sitemap discovery, quality gates, generation guidance |
@@ -179,6 +185,13 @@ flowchart LR
 | `/seo dataforseo <command>` | Live SERP, keyword, backlink, content, and AI visibility data |
 | `/seo firecrawl <command>` | JS-rendered crawling and site mapping via Firecrawl |
 | `/seo image-gen <use-case>` | OG images, hero images, product visuals, infographics |
+| `/seo ahrefs <command>` | Ahrefs backlinks and organic competitor research |
+| `/seo bing <command>` | Bing Webmaster diagnostics and IndexNow |
+| `/seo profound <command>` | LLM citation trend tracking |
+| `/seo seranking <command>` | AI share-of-voice tracking |
+| `/seo unlighthouse <url>` | Site-wide local Lighthouse crawl |
+| `/seo setup` | Create or refresh the isolated runtime |
+| `/seo doctor` | Diagnose runtime readiness |
 
 Full command details live in [docs/COMMANDS.md](docs/COMMANDS.md).
 
@@ -289,9 +302,14 @@ sequenceDiagram
 | Extension | Skill | Setup | Notes |
 |---|---|---|---|
 | DataForSEO | `seo-dataforseo`, `seo-maps`, `seo-ecommerce`, `seo-cluster` | `./extensions/dataforseo/install.sh` | Live SERP, keyword, backlinks, on-page, content, business data, AI visibility |
-| Google APIs | `seo-google`, `seo-performance` | `python scripts/google_auth.py --setup` | PageSpeed, CrUX, GSC, URL Inspection, Indexing API, GA4 |
+| Google APIs | `seo-google`, `seo-performance` | `codex-seo run google_auth.py --setup` | PageSpeed, CrUX, GSC, URL Inspection, Indexing API, GA4 |
 | Firecrawl | `seo-firecrawl` | `./extensions/firecrawl/install.sh` | JS-rendered crawl, scrape, site map |
 | Banana / Gemini | `seo-image-gen` | `./extensions/banana/install.sh` | AI image generation through `nanobanana-mcp` |
+| Ahrefs | `seo-ahrefs` | `./extensions/ahrefs/install.sh` | Backlinks, keywords, competitors |
+| Bing / IndexNow | `seo-bing` | `./extensions/bing-webmaster/install.sh` | Bing index diagnostics and URL submission |
+| Profound | `seo-profound` | `./extensions/profound/install.sh` | LLM citation time series |
+| SE Ranking | `seo-seranking` | `./extensions/seranking/install.sh` | Cross-platform AI share of voice |
+| Unlighthouse | `seo-unlighthouse` | `./extensions/unlighthouse/install.sh` | Local multi-page Lighthouse crawling |
 
 Optional integrations enrich the same workflow surface. If credentials or MCP servers are missing, wrappers return `setup_required` or `mcp_configured` states with no fabricated live data.
 
@@ -331,18 +349,20 @@ python scripts/demo_readiness.py --target https://example.com --live-apis --live
 
 ## Headless/API Usage
 
+See [docs/API-READY.md](docs/API-READY.md) for the complete runtime contract.
+
 Run a single workflow:
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-google https://example.com --json
-python scripts/run_skill_workflow.py --skill seo-dataforseo https://example.com --json
+./bin/codex-seo run run_skill_workflow.py --skill seo-technical https://example.com --json
+./bin/codex-seo run run_skill_workflow.py --skill seo-google https://example.com --json
+./bin/codex-seo run run_skill_workflow.py --skill seo-dataforseo https://example.com --json
 ```
 
 Run the full smoke suite:
 
 ```bash
-python scripts/run_api_smoke_suite.py https://example.com --json
+./bin/codex-seo run run_api_smoke_suite.py https://example.com --json
 ```
 
 Verify environment:
@@ -413,13 +433,14 @@ codex-seo/
 ├── .codex-plugin/plugin.json        # Codex plugin manifest
 ├── skills/
 │   ├── seo/SKILL.md                 # Main orchestrator
-│   └── seo-*/SKILL.md               # 26 specialist workflows
+│   └── seo-*/SKILL.md               # 27 core specialist workflows plus 5 optional provider workflows
 ├── agents/                          # 24 Codex TOML agent profiles
 ├── scripts/                         # Deterministic runners and API helpers
 ├── extensions/
 │   ├── dataforseo/                  # DataForSEO MCP setup and docs
 │   ├── firecrawl/                   # Firecrawl MCP setup and docs
-│   └── banana/                      # Gemini/nanobanana image generation setup
+│   ├── banana/                      # Gemini/nanobanana image generation setup
+│   └── additional providers/        # Ahrefs, Bing, Profound, SE Ranking, Unlighthouse
 ├── hooks/                           # Quality-gate hooks
 ├── schema/                          # Schema.org templates
 ├── docs/                            # Architecture, commands, installation, MCP, demo

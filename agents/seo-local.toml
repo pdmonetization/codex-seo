@@ -72,4 +72,8 @@ Provide a structured report with:
 - Location page quality (if multi-location)
 - Top 10 prioritized actions (Critical > High > Medium > Low)
 - Limitations disclaimer (what could not be assessed without paid tools)
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
 """

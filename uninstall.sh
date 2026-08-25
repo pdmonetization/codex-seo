@@ -10,7 +10,7 @@ main() {
     rm -rf "${SKILLS_ROOT}/seo"
 
     # Remove sub-skills
-    for skill in seo-audit seo-backlinks seo-cluster seo-competitor-pages seo-content seo-dataforseo seo-drift seo-ecommerce seo-flow seo-firecrawl seo-geo seo-google seo-hreflang seo-image-gen seo-images seo-local seo-maps seo-page seo-performance seo-plan seo-programmatic seo-schema seo-sitemap seo-sxo seo-technical seo-visual; do
+    for skill in seo-ahrefs seo-audit seo-backlinks seo-bing seo-cluster seo-competitor-pages seo-content seo-content-brief seo-dataforseo seo-drift seo-ecommerce seo-flow seo-firecrawl seo-geo seo-google seo-hreflang seo-image-gen seo-images seo-local seo-maps seo-page seo-performance seo-plan seo-profound seo-programmatic seo-schema seo-seranking seo-sitemap seo-sxo seo-technical seo-unlighthouse seo-visual; do
         rm -rf "${SKILLS_ROOT}/${skill}"
     done
 

@@ -76,16 +76,19 @@ main() {
     SKILLS_ROOT="${CODEX_ROOT}/skills"
     AGENT_DIR="${CODEX_ROOT}/agents"
     SKILL_DIR="${SKILLS_ROOT}/seo"
-    REPO_URL="${CODEX_SEO_REPO:-https://github.com/AgriciDaniel/codex-seo}"
-    REPO_REF="${CODEX_SEO_REF:-v1.9.6-codex.5}"
+    REPO_URL="${CODEX_SEO_REPO:-https://github.com/pdmonetization/codex-seo}"
+    REPO_REF="${CODEX_SEO_REF:-main}"
     PYTHON_BIN="$(resolve_python)" || { echo "[ERROR] Python 3 is required but not installed."; exit 1; }
     SUITE_SKILL_DIRS=(
         seo
         seo-audit
+        seo-ahrefs
         seo-backlinks
+        seo-bing
         seo-cluster
         seo-competitor-pages
         seo-content
+        seo-content-brief
         seo-dataforseo
         seo-drift
         seo-ecommerce
@@ -102,10 +105,13 @@ main() {
         seo-performance
         seo-plan
         seo-programmatic
+        seo-profound
         seo-schema
+        seo-seranking
         seo-sitemap
         seo-sxo
         seo-technical
+        seo-unlighthouse
         seo-visual
     )
 
@@ -155,7 +161,7 @@ main() {
         done
     fi
 
-    for dir_name in scripts schema pdf hooks extensions; do
+    for dir_name in bin scripts schema pdf hooks extensions; do
         if [ -d "${TEMP_DIR}/codex-seo/${dir_name}" ]; then
             mkdir -p "${SKILL_DIR}/${dir_name}"
             cp -r "${TEMP_DIR}/codex-seo/${dir_name}/." "${SKILL_DIR}/${dir_name}/"
@@ -179,6 +185,7 @@ main() {
     fi
 
     BOOTSTRAP_SCRIPT="${SKILL_DIR}/scripts/bootstrap_environment.py"
+    chmod +x "${SKILL_DIR}/bin/codex-seo" 2>/dev/null || true
     if [ ! -f "${BOOTSTRAP_SCRIPT}" ]; then
         echo "[ERROR] Bootstrap script was not installed to ${BOOTSTRAP_SCRIPT}."
         exit 1
