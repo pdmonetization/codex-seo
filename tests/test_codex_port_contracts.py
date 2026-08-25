@@ -193,6 +193,15 @@ def test_installers_copy_requirement_group_files():
     assert "requirements*.txt" in install_ps1
 
 
+def test_installers_copy_runtime_version_manifest():
+    install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
+    install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
+    assert '.codex-plugin/plugin.json' in install_sh
+    assert 'runtime-plugin.json' in install_sh
+    assert '.codex-plugin\\plugin.json' in install_ps1
+    assert 'runtime-plugin.json' in install_ps1
+
+
 def test_installers_use_bootstrap_json_output_file():
     install_sh = (ROOT / "install.sh").read_text(encoding="utf-8")
     install_ps1 = (ROOT / "install.ps1").read_text(encoding="utf-8")
