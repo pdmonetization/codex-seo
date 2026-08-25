@@ -8,7 +8,6 @@ Requires a Google Ads Manager account with a developer token.
 Usage:
     python keyword_planner.py ideas "seo tools" --json
     python keyword_planner.py volume "seo tools,seo audit,seo checker" --json
-    python keyword_planner.py forecast "seo tools" --json
 
 Prerequisites:
     - Google Ads Manager account (can be free)
@@ -28,6 +27,7 @@ Note: Accounts without active ad spend receive bucketed volume ranges
 
 import argparse
 import json
+import os
 import sys
 from typing import Optional
 
@@ -41,7 +41,6 @@ except ImportError:
 try:
     from google_auth import load_config
 except ImportError:
-    import os
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from google_auth import load_config
 

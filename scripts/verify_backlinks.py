@@ -31,7 +31,8 @@ sys.path.insert(0, _SCRIPTS_DIR)
 try:
     from fetch_page import fetch_page
     from parse_html import parse_html
-    from seo_pipeline_utils import build_session, validate_public_url
+    from google_auth import validate_url
+    from url_safety import URLSafetyError, safe_requests_head
 except ImportError as e:
     print(f"Error: Required scripts not found in scripts/: {e}", file=sys.stderr)
     sys.exit(1)
@@ -59,9 +60,7 @@ def _head_check(url: str, timeout: int = 15) -> dict:
         Dict with status_code, exists (bool), redirect_url (if redirected).
     """
     try:
-        url = validate_public_url(url)
-        session = build_session()
-        resp = session.head(
+        resp = safe_requests_head(
             url,
             timeout=timeout,
             allow_redirects=True,
@@ -72,6 +71,13 @@ def _head_check(url: str, timeout: int = 15) -> dict:
             "exists": resp.status_code == 200,
             "redirect_url": str(resp.url) if str(resp.url) != url else None,
             "error": None,
+        }
+    except URLSafetyError as e:
+        return {
+            "status_code": None,
+            "exists": False,
+            "redirect_url": None,
+            "error": f"blocked by SSRF protection: {e}",
         }
     except requests.exceptions.Timeout:
         return {"status_code": None, "exists": False, "redirect_url": None, "error": "timeout"}

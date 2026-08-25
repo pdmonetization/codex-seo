@@ -6,7 +6,7 @@ argument-hint: "[command] [url]"
 license: MIT
 metadata:
   author: AgriciDaniel
-  version: "1.9.6"
+  version: "2.2.4"
   category: seo
 ---
 
@@ -16,11 +16,14 @@ Codex can invoke this skill from natural language ("audit this site", "check sch
 "run a technical SEO review") or from command-like prompts such as `/seo audit <url>`.
 Use the matching specialist skill directly when the request is narrow.
 
-**Scripts:** Located at the plugin root `scripts/` directory.
+**Runtime:** Run bundled Python tools through `codex-seo run <script.py>` in the
+examples below. Resolve `codex-seo` to `<seo-skill-root>/bin/codex-seo` for an
+installed skill or `./bin/codex-seo` in a repository checkout. Never invoke
+bundled scripts with a bare Python interpreter.
 
 Comprehensive SEO analysis across all industries (SaaS, local services,
-e-commerce, publishers, agencies). Orchestrates 26 specialized sub-skills and 24 Codex
-agent profiles, with optional MCP-backed extensions for DataForSEO, Firecrawl, and image generation.
+e-commerce, publishers, agencies). Orchestrates 27 specialized sub-skills and
+24 Codex agent profiles, with optional vendor and MCP-backed extensions.
 
 ## Shared Data Cache
 
@@ -49,7 +52,10 @@ Check these cache files when present:
 | `/seo schema <url>` | Detect, validate, and generate Schema.org markup |
 | `/seo images <url or optimize>` | Image SEO: on-page audit, SERP analysis, file optimization |
 | `/seo technical <url>` | Technical SEO audit (9 categories) |
+| `/seo performance <url>` | Core Web Vitals and performance analysis |
+| `/seo visual <url>` | Screenshot, mobile, and above-the-fold UX analysis |
 | `/seo content <url>` | E-E-A-T and content quality analysis |
+| `/seo content-brief <topic or url>` | Generate detailed SEO content brief with target keywords, outline, internal links |
 | `/seo geo <url>` | AI Overviews / Generative Engine Optimization |
 | `/seo plan <business-type>` | Strategic SEO planning |
 | `/seo programmatic [url\|plan]` | Programmatic SEO analysis and planning |
@@ -69,27 +75,66 @@ Check these cache files when present:
 | `/seo dataforseo [command]` | Live SEO data via DataForSEO (extension) |
 | `/seo image-gen [use-case] <description>` | AI image generation for SEO assets (extension) |
 | `/seo flow [stage] [url\|topic]` | FLOW framework: evidence-led prompts for Find, Leverage, Optimize, Win, or Local stages |
+| `/seo ahrefs [command]` | Ahrefs metrics and competitive research (extension) |
+| `/seo bing [command]` | Bing Webmaster and IndexNow workflows (extension) |
+| `/seo profound [command]` | LLM citation tracking (extension) |
+| `/seo seranking [command]` | AI share-of-voice tracking (extension) |
+| `/seo unlighthouse <url>` | Site-wide Lighthouse crawling (extension) |
+| `/seo setup` | Explicitly create or refresh the isolated Python runtime and Chromium |
+| `/seo doctor` | Check runtime readiness without changing the system |
+
+## Runtime Setup
+
+Run setup only when the user explicitly invokes `/seo setup` or explicitly asks
+to repair dependencies. Execute `codex-seo setup`, report core and Chromium
+status separately, and do not fall back to global or user package installation.
+For diagnosis, execute `codex-seo doctor --json`; its output intentionally omits
+absolute paths and environment values. If any `codex-seo run` command reports
+that setup is required, suggest `/seo setup` and do not improvise a `pip install`.
 
 ## Orchestration Logic
 
 When the user invokes `/seo audit`, delegate to subagents in parallel:
 1. Detect business type (SaaS, local, ecommerce, publisher, agency, other)
 2. Spawn subagents: seo-technical, seo-content, seo-schema, seo-sitemap, seo-performance, seo-visual, seo-geo
-3. If Google API credentials detected (`python scripts/google_auth.py --check`), also spawn seo-google agent
+3. If Google API credentials detected (`codex-seo run google_auth.py --check`), also spawn seo-google agent
 4. If local business detected, also spawn seo-local agent
 5. If local business detected AND DataForSEO MCP available, also spawn seo-maps agent
-6. If backlink APIs detected (`python scripts/backlinks_auth.py --check`), also spawn seo-backlinks agent
+6. If backlink APIs detected (`codex-seo run backlinks_auth.py --check`), also spawn seo-backlinks agent
 7. If Firecrawl MCP available, use `firecrawl_map` to discover all site URLs before analysis
 8. If content strategy signals detected (blog, pillar pages, topic clusters), also spawn seo-cluster agent
 9. If e-commerce detected, also spawn seo-ecommerce agent
-10. If drift baseline exists for this URL (`python scripts/drift_history.py <url>`), also spawn seo-drift agent
+10. If drift baseline exists for this URL (`codex-seo run drift_history.py <url>`), also spawn seo-drift agent
 11. Always include seo-sxo in full audits (search experience applies to all sites)
 12. Collect results and generate unified report with SEO Health Score (0-100)
-13. Create prioritized action plan (Critical -> High -> Medium -> Low)
-14. **Offer PDF report**: "Generate a professional PDF report? Use `/seo google report full`"
+13. **Synthesize via the 10-principle framework** (see "Synthesis Methodology" below), walk PERCEIVE → ANALYZE → VALIDATE → ACT before bucketing findings into Critical / High / Medium / Low
+14. Create prioritized action plan with dependency sequencing + falsifiability per recommendation
+15. **Offer PDF report**: "Generate a professional PDF report? Use `/seo google report full`"
 
 For individual commands, load the relevant sub-skill directly.
 After any analysis command completes, offer to generate a PDF report via `scripts/google_report.py`.
+
+## Synthesis Methodology
+
+Audits are not just findings, they are findings synthesized into a coherent
+strategy. codex-seo uses a 10-principle thinking framework grouped into four
+phases: **PERCEIVE** (observe-external · observe-internal · listen),
+**ANALYZE** (think · connect-lateral · connect-system), **VALIDATE** (feel ·
+accept), **ACT** (create · grow).
+
+Full audits (`/seo audit`, `/seo page`) walk every phase before emitting the
+action plan. Narrower commands (`/seo schema`, `/seo images`, etc.) pass at
+least THINK + ACCEPT before emitting (sound first principle, surfaced
+falsifiability). The Critical / High / Medium / Low priority buckets are the
+**output** of validation, not a substitute for it.
+
+Full methodology + per-principle SEO mapping: `references/thinking-framework.md`.
+
+Each emitted recommendation should carry:
+- The first-principle observation it rests on (THINK)
+- The dependency on / unblock relationship to other recommendations (CONNECT-system)
+- An explicit "how would we know this failed?" check (ACCEPT)
+- A leading indicator the user can monitor without re-running the audit (GROW)
 
 ## Industry Detection
 
@@ -107,7 +152,7 @@ Hard rules:
 - WARNING at 30+ location pages (enforce 60%+ unique content)
 - HARD STOP at 50+ location pages (require user justification)
 - Never recommend HowTo schema (deprecated Sept 2023)
-- FAQ schema for Google rich results: only government and healthcare sites (Aug 2023 restriction); existing FAQPage on commercial sites -> flag Info priority (not Critical), noting AI/LLM citation benefit; adding new FAQPage -> not recommended for Google benefit
+- FAQ schema: Google retired FAQ rich results for ALL sites on May 7, 2026 (no SERP feature anymore; supersedes the Aug 2023 gov/health restriction). Flag existing FAQPage at Info (not Critical); do not claim confirmed AI/LLM citation benefit; do not recommend removal; do not recommend new FAQPage for Google SERP benefit; use QAPage for genuine user Q&A
 - All Core Web Vitals references use INP, never FID
 
 ## Community Footer
@@ -149,8 +194,8 @@ Display after these commands complete their full output:
 ### When to skip
 
 Do NOT show the footer after:
-- `/seo images` (quick image check — too small)
-- `/seo hreflang` (quick validation — too small)
+- `/seo images` (quick image check, too small)
+- `/seo hreflang` (quick validation, too small)
 - `/seo competitor-pages` (page generation step)
 - `/seo programmatic` (quick analysis)
 - `/seo dataforseo` (data fetching utility)
@@ -194,7 +239,8 @@ Weighted aggregate of all categories:
 
 ## Sub-Skills
 
-This skill orchestrates 26 specialized sub-skills, including optional extension-backed workflows:
+This skill orchestrates 27 built-in specialist skills, plus optional
+extension-backed workflows:
 
 1. **seo-audit** -- Full website audit with parallel delegation
 2. **seo-page** -- Deep single-page analysis
@@ -222,6 +268,10 @@ This skill orchestrates 26 specialized sub-skills, including optional extension-
 24. **seo-dataforseo** -- Live SEO data via DataForSEO MCP (extension)
 25. **seo-image-gen** -- AI image generation for SEO assets via Gemini (extension)
 26. **seo-flow** -- FLOW framework integration (Find -> Leverage -> Optimize -> Win, 41 AI prompts, CC BY 4.0)
+27. **seo-content-brief** -- Search-intent-led content briefs, outlines, evidence, and internal-link targets
+
+Optional extension skills: **seo-ahrefs**, **seo-bing**, **seo-profound**,
+**seo-seranking**, and **seo-unlighthouse**.
 
 ## Subagents
 
@@ -241,9 +291,9 @@ For parallel analysis during audits:
 - `seo-sxo` -- Page-type mismatch, user stories, persona scoring (always in full audits)
 - `seo-drift` -- Baseline comparison (conditional: drift baseline exists for URL)
 - `seo-ecommerce` -- Product schema, marketplace intel (conditional: e-commerce detected)
+- `seo-flow` -- FLOW framework prompts (conditional: spawned for content strategy workflows)
 - `seo-dataforseo` -- Live SERP, keyword, backlink, local SEO data (extension, optional)
 - `seo-image-gen` -- SEO image audit and generation plan (extension, optional)
-- `seo-firecrawl` -- Full-site crawl and site mapping (extension, optional; used by audit for URL discovery)
 
 ## Error Handling
 

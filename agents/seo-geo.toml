@@ -58,4 +58,8 @@ Provide a structured report with:
 - Brand mention analysis (Wikipedia, Reddit, YouTube, LinkedIn)
 - Top 5 highest-impact changes with effort estimates
 - Platform-specific scores (Google AIO, ChatGPT, Perplexity, Bing Copilot)
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
 """

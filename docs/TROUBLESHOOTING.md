@@ -15,6 +15,7 @@ Restart Codex after reinstalling.
 
 ```bash
 ~/.codex/skills/seo/.venv/bin/python ~/.codex/skills/seo/scripts/verify_environment.py
+~/.codex/skills/seo/bin/codex-seo doctor --json
 ```
 
 If Playwright Chromium fails, core workflows can still run. Visual and PDF workflows remain limited until browser installation succeeds.
@@ -36,7 +37,7 @@ Legacy `~/.config/claude-seo/` files are read as fallback only.
 Run a narrow workflow first:
 
 ```bash
-python scripts/run_skill_workflow.py --skill seo-technical https://example.com --json
+./bin/codex-seo run run_skill_workflow.py --skill seo-technical https://example.com --json
 ```
 
 For optional MCP/API workflows, `setup_required` is a valid result when credentials or MCP servers are absent.
@@ -44,5 +45,5 @@ For optional MCP/API workflows, `setup_required` is a valid result when credenti
 ## Reinstall
 
 ```bash
-CODEX_SEO_REPO=https://github.com/AgriciDaniel/codex-seo CODEX_SEO_REF=v1.9.6-codex.5 bash install.sh
+CODEX_SEO_REPO=https://github.com/pdmonetization/codex-seo CODEX_SEO_REF=main bash install.sh
 ```

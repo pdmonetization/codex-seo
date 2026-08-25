@@ -60,4 +60,10 @@ Provide:
 - Validation results (pass/fail per block)
 - Missing opportunities
 - Generated JSON-LD for implementation
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
+
+Use `codex-seo run render_page.py <url> --mode auto --json` before scoring so SPA and server-rendered content are assessed consistently.
 """

@@ -11,11 +11,14 @@ AGENTS = ROOT / "agents"
 
 EXPECTED_SKILLS = {
     "seo",
+    "seo-ahrefs",
     "seo-audit",
     "seo-backlinks",
+    "seo-bing",
     "seo-cluster",
     "seo-competitor-pages",
     "seo-content",
+    "seo-content-brief",
     "seo-dataforseo",
     "seo-drift",
     "seo-ecommerce",
@@ -32,10 +35,13 @@ EXPECTED_SKILLS = {
     "seo-performance",
     "seo-plan",
     "seo-programmatic",
+    "seo-profound",
     "seo-schema",
+    "seo-seranking",
     "seo-sitemap",
     "seo-sxo",
     "seo-technical",
+    "seo-unlighthouse",
     "seo-visual",
 }
 
@@ -71,10 +77,10 @@ EXPECTED_AGENTS = {
 def test_codex_plugin_manifest_is_valid():
     manifest = json.loads((ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
     assert manifest["name"] == "codex-seo"
-    assert manifest["version"] == "1.9.6+codex.5"
+    assert manifest["version"] == "2.2.4+codex.1"
     assert manifest["skills"] == "./skills/"
     assert manifest["hooks"] == "./hooks/hooks.json"
-    assert manifest["repository"] == "https://github.com/AgriciDaniel/codex-seo"
+    assert manifest["repository"] == "https://github.com/pdmonetization/codex-seo"
     assert manifest["interface"]["displayName"] == "Codex SEO"
 
 
@@ -210,7 +216,6 @@ def test_extension_fallback_skills_match_canonical_skills():
     mirrors = {
         "seo-dataforseo": ROOT / "extensions" / "dataforseo" / "skills" / "seo-dataforseo" / "SKILL.md",
         "seo-firecrawl": ROOT / "extensions" / "firecrawl" / "skills" / "seo-firecrawl" / "SKILL.md",
-        "seo-image-gen": ROOT / "extensions" / "banana" / "skills" / "seo-image-gen" / "SKILL.md",
     }
     for skill, fallback in mirrors.items():
         canonical = SKILLS / skill / "SKILL.md"

@@ -20,7 +20,7 @@ When delegated tasks during an SEO audit or analysis:
 
 Before ANY DataForSEO Merchant API call:
 ```bash
-python scripts/dataforseo_costs.py check <endpoint>
+codex-seo run dataforseo_costs.py check <endpoint>
 ```
 
 Only proceed if `"status": "approved"`. If `"needs_approval"`, surface the cost
@@ -29,7 +29,7 @@ the limitation.
 
 After each API call, log the cost:
 ```bash
-python scripts/dataforseo_costs.py log <endpoint> <actual_cost>
+codex-seo run dataforseo_costs.py log <endpoint> <actual_cost>
 ```
 
 ## Analysis Priorities
@@ -55,4 +55,8 @@ Match existing codex-seo patterns:
 - If the URL is not a product page, detect page type and adjust analysis scope
 - If schema parsing fails, analyze raw HTML for product signals
 - Report all errors clearly with suggested next steps
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
 """

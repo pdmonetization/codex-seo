@@ -35,7 +35,7 @@ Navigate to **APIs & Services > Library** and enable:
 1. **APIs & Services > Credentials > Create Credentials > API key**
 2. Click **Restrict key**:
    - Under **API restrictions**, select: PageSpeed Insights API, Chrome UX Report API, Knowledge Graph Search API
-3. Copy the key (starts with `AIzaSy...`)
+3. Copy the generated API key and store it securely
 
 ## Step 4: Create a Service Account
 
@@ -106,7 +106,7 @@ Save to `~/.config/codex-seo/google-api.json`:
 ## Step 8: Verify Setup
 
 ```bash
-python scripts/google_auth.py --check
+codex-seo run google_auth.py --check
 ```
 
 Expected output at Tier 2 (full):

@@ -181,17 +181,20 @@ $codexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".c
 $skillsRoot = Join-Path $codexRoot "skills"
 $agentDir = Join-Path $codexRoot "agents"
 $skillDir = Join-Path $skillsRoot "seo"
-$repoUrl = if ($env:CODEX_SEO_REPO) { $env:CODEX_SEO_REPO } else { "https://github.com/AgriciDaniel/codex-seo" }
-$repoRef = if ($env:CODEX_SEO_REF) { $env:CODEX_SEO_REF } else { "v1.9.6-codex.5" }
+$repoUrl = if ($env:CODEX_SEO_REPO) { $env:CODEX_SEO_REPO } else { "https://github.com/pdmonetization/codex-seo" }
+$repoRef = if ($env:CODEX_SEO_REF) { $env:CODEX_SEO_REF } else { "main" }
 $skipPlaywrightBrowser = Test-Truthy $env:CODEX_SEO_SKIP_PLAYWRIGHT_BROWSER
 $playwrightWithDeps = Test-Truthy $env:CODEX_SEO_PLAYWRIGHT_WITH_DEPS
 $suiteSkillDirs = @(
     "seo",
     "seo-audit",
+    "seo-ahrefs",
     "seo-backlinks",
+    "seo-bing",
     "seo-cluster",
     "seo-competitor-pages",
     "seo-content",
+    "seo-content-brief",
     "seo-dataforseo",
     "seo-drift",
     "seo-ecommerce",
@@ -208,10 +211,13 @@ $suiteSkillDirs = @(
     "seo-performance",
     "seo-plan",
     "seo-programmatic",
+    "seo-profound",
     "seo-schema",
+    "seo-seranking",
     "seo-sitemap",
     "seo-sxo",
     "seo-technical",
+    "seo-unlighthouse",
     "seo-visual"
 )
 
@@ -253,7 +259,7 @@ try {
         }
     }
 
-    foreach ($pathName in @("scripts", "schema", "pdf", "hooks", "extensions")) {
+    foreach ($pathName in @("bin", "scripts", "schema", "pdf", "hooks", "extensions")) {
         $sourcePath = Join-Path $checkoutDir $pathName
         if (Test-Path $sourcePath) {
             $targetPath = Join-Path $skillDir $pathName

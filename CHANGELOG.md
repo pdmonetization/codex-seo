@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.2.4+codex.1] - 2026-08-25
+
+### Upstream synchronization
+
+- Synchronized the Codex port with `AgriciDaniel/claude-seo` v2.2.4
+  (`09d37c7`), preserving upstream attribution and Codex-specific behavior.
+- Added SPA-aware rendering, sitemap discovery, content brief/quality tools,
+  Google update tracking, IndexNow, LCP subparts, UCP checks, e-commerce schema
+  generation, portability checks, and the expanded security regression suite.
+
+### Codex runtime and packaging
+
+- Added the managed `bin/codex-seo` launcher with isolated setup, diagnostics,
+  a script allowlist, redacted errors, and cross-platform Python discovery.
+- Updated manifests and installers to `2.2.4+codex.1`, added the content-brief
+  skill and five optional provider skills, and retained 24 TOML agent profiles.
+- Added Codex-native hook launching and `CODEX_HOME` support across extension
+  installers, with read-only migration fallbacks for legacy Claude SEO config.
+
+### Security and correctness
+
+- Ported DNS-rebinding/SSRF protections, Google API header redaction, secure
+  OAuth token persistence, installer credential-injection guards, and release
+  verification utilities.
+- Updated current Google SEO facts, schema deprecations, dependency security
+  floors, and routing/consistency checks.
+
 ## [1.9.6+codex.5] - 2026-04-28
 
 ### Fixed

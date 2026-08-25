@@ -12,8 +12,8 @@ then comparing that against the target page.
 
 ### 1. Fetch and Parse Target Page
 
-- Fetch the target URL using `python scripts/fetch_page.py "<url>"` (SSRF protection)
-- Parse with `python scripts/parse_html.py "<url>"` to extract SEO elements
+- Fetch the target URL using `codex-seo run fetch_page.py "<url>"` (SSRF protection)
+- Parse with `codex-seo run parse_html.py "<url>"` to extract SEO elements
 - Identify: page type, title, H1, meta description, headings, word count, schema, CTAs, media
 - If no keyword was provided, derive primary keyword from title + H1 overlap
 
@@ -85,4 +85,8 @@ Before presenting results, verify:
 - [ ] Persona scores include concrete improvement suggestions
 - [ ] Mismatch severity is clearly rated
 - [ ] Limitations section is present
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
 """

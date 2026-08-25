@@ -11,6 +11,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -31,6 +32,26 @@ OPTIONAL_REQUIREMENT_GROUPS = [
     ("google", ROOT / "requirements-google.txt"),
     ("ocr", ROOT / "requirements-ocr.txt"),
 ]
+
+
+def write_runtime_state(browser_ready: bool) -> None:
+    """Record the environment state used by the bundled ``codex-seo`` launcher."""
+    requirements = ROOT / "requirements.txt"
+    requirements_hash = (
+        hashlib.sha256(requirements.read_bytes()).hexdigest()
+        if requirements.exists()
+        else "missing"
+    )
+    state = {
+        "runtime_schema": 1,
+        "requirements_sha256": requirements_hash,
+        "python": f"{sys.version_info.major}.{sys.version_info.minor}",
+        "browser_ready": browser_ready,
+    }
+    (ROOT / "runtime-state.json").write_text(
+        json.dumps(state, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def truncate_output(text: str, limit: int = OUTPUT_LIMIT) -> tuple[str, bool]:
@@ -173,6 +194,8 @@ def bootstrap_environment(
         and verification_step["ok"]
         and core_ready
     )
+    if ok:
+        write_runtime_state(bool(playwright_step and playwright_step.get("ok")))
     return {
         "ok": ok,
         "full_ready": full_ready,

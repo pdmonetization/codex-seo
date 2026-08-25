@@ -9,10 +9,13 @@ $agentDir = Join-Path $codexRoot "agents"
 $skillNames = @(
     "seo",
     "seo-audit",
+    "seo-ahrefs",
     "seo-backlinks",
+    "seo-bing",
     "seo-cluster",
     "seo-competitor-pages",
     "seo-content",
+    "seo-content-brief",
     "seo-dataforseo",
     "seo-drift",
     "seo-ecommerce",
@@ -29,10 +32,13 @@ $skillNames = @(
     "seo-performance",
     "seo-plan",
     "seo-programmatic",
+    "seo-profound",
     "seo-schema",
+    "seo-seranking",
     "seo-sitemap",
     "seo-sxo",
     "seo-technical",
+    "seo-unlighthouse",
     "seo-visual"
 )
 

@@ -71,8 +71,8 @@ npx lighthouse URL --output json
 
 If Google API credentials are configured, prefer CrUX field data over Lighthouse lab data for CWV assessment:
 ```bash
-python scripts/pagespeed_check.py URL --json
-python scripts/crux_history.py URL --json
+codex-seo run pagespeed_check.py URL --json
+codex-seo run crux_history.py URL --json
 ```
 Field data (28-day Chrome user average) is more representative than lab data (single Lighthouse run). Use lab data as fallback when CrUX returns 404 (insufficient traffic).
 
@@ -83,4 +83,10 @@ Provide:
 - Core Web Vitals status (pass/fail per metric)
 - Specific bottlenecks identified
 - Prioritized recommendations with expected impact
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
+
+Use `codex-seo run render_page.py <url> --mode auto --json` before scoring so SPA and server-rendered content are assessed consistently.
 """

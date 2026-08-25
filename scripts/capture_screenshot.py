@@ -2,31 +2,44 @@
 """
 Capture screenshots of web pages using Playwright.
 
+In v2.0.0 the SSRF pre-flight check is delegated to url_safety, and a
+Playwright route() handler aborts any subresource request whose hostname
+resolves to a non-public IP (defence in depth against DNS rebinding
+inside Chromium's resolver).
+
 Usage:
     python capture_screenshot.py https://example.com
-    python capture_screenshot.py https://example.com --mobile
+    python capture_screenshot.py https://example.com --viewport mobile
     python capture_screenshot.py https://example.com --output screenshots/
 """
 
+from __future__ import annotations
+
 import argparse
-import json
 import os
 import sys
 from urllib.parse import ParseResult, urlparse
 
 try:
-    from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
-    PLAYWRIGHT_IMPORT_ERROR = None
-except ImportError as exc:
-    sync_playwright = None
-    PlaywrightTimeout = TimeoutError
-    PLAYWRIGHT_IMPORT_ERROR = exc
-
-try:
-    from seo_pipeline_utils import install_playwright_public_url_guard, validate_public_url
+    from playwright.sync_api import (
+        sync_playwright,
+        TimeoutError as PlaywrightTimeout,
+    )
 except ImportError:
-    install_playwright_public_url_guard = None
-    validate_public_url = None
+    print(
+        "Error: playwright required. Install with: "
+        "pip install playwright && playwright install chromium"
+    )
+    sys.exit(1)
+
+_SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+from url_safety import (  # noqa: E402  (sys.path massage above is intentional)
+    URLSafetyError,
+    make_safe_playwright_route_handler,
+    validate_url_strict,
+)
 
 
 VIEWPORTS = {
@@ -38,7 +51,12 @@ VIEWPORTS = {
 
 
 def normalize_url(url: str) -> tuple[str, ParseResult]:
-    """Normalize URL and return (url, parsed_url)."""
+    """Normalize URL and return (url, parsed_url).
+
+    Raises ValueError on invalid scheme or missing hostname (caller-side
+    contract preserved from v1.x). SSRF validation is performed separately
+    via url_safety.validate_url_strict before any network I/O.
+    """
     parsed = urlparse(url)
     if not parsed.scheme:
         url = f"https://{url}"
@@ -92,17 +110,23 @@ def capture_screenshot(
         return result
 
     try:
-        if validate_public_url:
-            url = validate_public_url(url)
-            parsed = urlparse(url)
-        else:
-            url, parsed = normalize_url(url)
+        url, _parsed = normalize_url(url)
         result["url"] = url
     except ValueError as e:
         result["error"] = str(e)
         return result
 
+    # SSRF pre-flight via the canonical safety module: resolves DNS,
+    # rejects any non-public A record, blocks cloud-metadata endpoints.
+    try:
+        url, _pinned_ip = validate_url_strict(url)
+        result["url"] = url
+    except URLSafetyError as e:
+        result["error"] = f"url_safety: {e}"
+        return result
+
     vp = VIEWPORTS[viewport]
+    route_handler = make_safe_playwright_route_handler()
 
     try:
         with sync_playwright() as p:
@@ -114,6 +138,10 @@ def capture_screenshot(
             page = context.new_page()
             if install_playwright_public_url_guard:
                 install_playwright_public_url_guard(page)
+
+            # Defence in depth: abort any subresource that lands on a
+            # private IP even after Chromium re-resolves DNS.
+            page.route("**/*", route_handler)
 
             # Navigate and wait for network idle
             page.goto(url, wait_until="networkidle", timeout=timeout)

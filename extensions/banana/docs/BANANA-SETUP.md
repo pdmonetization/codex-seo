@@ -35,7 +35,7 @@ add to `~/.codex/settings.json`:
 
 Run the validation script:
 ```bash
-python3 ~/.codex/skills/seo-image-gen/scripts/validate_setup.py
+codex-seo run --extension banana validate_setup.py
 ```
 
 Or check manually:

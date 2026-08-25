@@ -65,4 +65,8 @@ Before presenting results, verify:
 - [ ] Word count targets are within specification (pillar: 2500-4000, spoke: 1200-1800)
 - [ ] Total cluster size is within constraints (2-5 clusters, 2-4 posts each)
 - [ ] SERP overlap data supports cluster groupings (no spoke with < 4 overlap to cluster peers)
+
+## Audit Artifact Contract
+
+When `output_dir` is supplied, write the specialist result to `findings/.json` under that directory. Return the artifact path and a concise summary to the orchestrator. Do not discard partial evidence.
 """

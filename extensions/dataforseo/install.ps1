@@ -15,7 +15,7 @@ $SkillsRoot = Join-Path $CodexRoot "skills"
 $SeoSkillDir = Join-Path $SkillsRoot "seo"
 if (-not (Test-Path $SeoSkillDir)) {
     Write-Host "✗ Codex SEO is not installed." -ForegroundColor Red
-    Write-Host "  Install it first: irm https://raw.githubusercontent.com/AgriciDaniel/codex-seo/main/install.ps1 | iex"
+    Write-Host "  Install it first: irm https://raw.githubusercontent.com/pdmonetization/codex-seo/main/install.ps1 | iex"
     exit 1
 }
 Write-Host "✓ Codex SEO detected" -ForegroundColor Green
