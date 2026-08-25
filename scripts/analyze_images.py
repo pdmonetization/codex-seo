@@ -37,6 +37,17 @@ def weak_alt_text(value: str | None) -> bool:
     return bool(re.fullmatch(r"(image|photo|graphic|img|picture)(\s*\d+)?", lowered) or lowered.endswith((".jpg", ".jpeg", ".png", ".webp", ".avif")))
 
 
+def image_alt_status(image: dict[str, Any]) -> str:
+    """Classify an image alt implementation without penalizing decoration."""
+    if image.get("alt") is None:
+        return "missing"
+    if image.get("decorative"):
+        return "decorative"
+    if weak_alt_text(image.get("alt")):
+        return "weak"
+    return "descriptive"
+
+
 def fetch_image_metadata(session: Any, image_url: str, timeout: int) -> tuple[int | None, str | None]:
     """Fetch lightweight image headers when possible."""
     try:
@@ -60,6 +71,7 @@ def analyze_images(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict[str, Any]:
     images = parse_data.get("images", [])
     missing_alt = 0
     weak_alt = 0
+    decorative_alt = 0
     missing_dimensions = 0
     oversized_images = 0
     legacy_formats = 0
@@ -69,10 +81,13 @@ def analyze_images(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict[str, Any]:
     for index, image in enumerate(images[:12]):
         image_url = image.get("src") or ""
         suffix = extension_for(image_url)
-        if image.get("alt") is None:
+        alt_status = image_alt_status(image)
+        if alt_status == "missing":
             missing_alt += 1
-        elif weak_alt_text(image.get("alt")):
+        elif alt_status == "weak":
             weak_alt += 1
+        elif alt_status == "decorative":
+            decorative_alt += 1
         if not image.get("width") or not image.get("height"):
             missing_dimensions += 1
         if index > 0 and image.get("loading") != "lazy":
@@ -87,6 +102,8 @@ def analyze_images(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict[str, Any]:
             {
                 "src": image_url,
                 "alt": image.get("alt"),
+                "alt_status": alt_status,
+                "decorative": bool(image.get("decorative")),
                 "width": image.get("width"),
                 "height": image.get("height"),
                 "loading": image.get("loading"),
@@ -137,6 +154,7 @@ def analyze_images(url: str, timeout: int = DEFAULT_TIMEOUT) -> dict[str, Any]:
             "total_images": len(images),
             "missing_alt": missing_alt,
             "weak_alt": weak_alt,
+            "decorative_alt": decorative_alt,
             "oversized_images": oversized_images,
             "missing_dimensions": missing_dimensions,
             "legacy_format_images": legacy_formats,

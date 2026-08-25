@@ -73,6 +73,24 @@ def _detect_lazy_method(img) -> str:
     return "none"
 
 
+def _is_decorative_image(img) -> bool:
+    """Return whether markup explicitly treats an empty-alt image as decorative.
+
+    Empty alt text is valid for decorative images. Accessibility-hidden card
+    thumbnails are a common example: the linked title is exposed separately,
+    while the image link is removed from the accessibility tree.
+    """
+    if img.get("alt") != "":
+        return False
+    if str(img.get("aria-hidden", "")).lower() == "true":
+        return True
+    if str(img.get("role", "")).lower() in {"none", "presentation"}:
+        return True
+    return img.find_parent(
+        lambda tag: str(tag.get("aria-hidden", "")).lower() == "true"
+    ) is not None
+
+
 def parse_html(html: str, base_url: Optional[str] = None) -> dict:
     """
     Parse HTML and extract SEO-relevant elements.
@@ -160,6 +178,7 @@ def parse_html(html: str, base_url: Optional[str] = None) -> dict:
         result["images"].append({
             "src": src,
             "alt": img.get("alt"),
+            "decorative": _is_decorative_image(img),
             "width": img.get("width"),
             "height": img.get("height"),
             "loading": img.get("loading"),
