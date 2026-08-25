@@ -173,6 +173,13 @@ main() {
         cp "${requirements_file}" "${SKILL_DIR}/$(basename "${requirements_file}")"
     done
 
+    RUNTIME_MANIFEST="${TEMP_DIR}/codex-seo/.codex-plugin/plugin.json"
+    if [ ! -f "${RUNTIME_MANIFEST}" ]; then
+        echo "[ERROR] Runtime manifest is missing from the downloaded package."
+        exit 1
+    fi
+    cp "${RUNTIME_MANIFEST}" "${SKILL_DIR}/runtime-plugin.json"
+
     for doc_name in CHANGELOG.md README.md; do
         if [ -f "${TEMP_DIR}/codex-seo/${doc_name}" ]; then
             cp "${TEMP_DIR}/codex-seo/${doc_name}" "${SKILL_DIR}/${doc_name}"

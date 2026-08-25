@@ -272,6 +272,12 @@ try {
         Copy-Item -Path $_.FullName -Destination (Join-Path $skillDir $_.Name) -Force
     }
 
+    $runtimeManifest = Join-Path $checkoutDir ".codex-plugin\plugin.json"
+    if (-not (Test-Path $runtimeManifest)) {
+        throw "Runtime manifest is missing from the downloaded package."
+    }
+    Copy-Item -Path $runtimeManifest -Destination (Join-Path $skillDir "runtime-plugin.json") -Force
+
     foreach ($doc in @("CHANGELOG.md", "README.md")) {
         $sourceDoc = Join-Path $checkoutDir $doc
         if (Test-Path $sourceDoc) {
